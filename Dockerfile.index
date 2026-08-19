@@ -1,0 +1,12 @@
+FROM alpine:3.22@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce
+
+RUN apk add --no-cache \
+    coreutils=9.7-r1 \
+    python3=3.12.13-r0 \
+    signify=32-r1 \
+    zstd=1.5.7-r0
+
+COPY --chmod=0755 scripts/package-index-container.py /usr/local/sbin/package-volatoo-index
+COPY --chmod=0755 scripts/sign-live-media-container.py /usr/local/sbin/sign-volatoo-live-media
+
+ENTRYPOINT ["/usr/local/sbin/package-volatoo-index"]
