@@ -74,10 +74,10 @@ done
 	echo "error: output already exists: $output" >&2
 	exit 1
 }
-[[ $(docker context show) == orbstack ]] || {
-	echo "error: Docker context must be orbstack" >&2
-	exit 1
-}
+repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+# shellcheck source=scripts/require-docker-context.sh
+source "$repo_root/scripts/require-docker-context.sh"
+volatoo_require_docker_context
 
 absolute_file()
 {
@@ -107,7 +107,6 @@ cleanup()
 }
 trap cleanup EXIT
 
-repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 image=volatoo-releng-index:1
 docker build --file "$repo_root/Dockerfile.index" --tag "$image" "$repo_root"
 docker run --rm --network none \

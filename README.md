@@ -52,9 +52,10 @@ index digest, channel, and build ID. Live-root construction and QA can consume
 the same immutable inputs without trusting repository paths or accepting a
 mix of independently valid documents from different releases.
 
-The wrapper refuses Docker contexts other than `orbstack`. Private key bytes
-are mounted read-only into the network-disabled signing container and are
-never copied to the publication tree.
+The wrappers require Docker context `orbstack` locally and accept the standard
+`default` context only on GitHub Actions Linux runners. Private key bytes are
+mounted read-only into the network-disabled signing container and are never
+copied to the publication tree.
 
 ## Live-media release signature
 
