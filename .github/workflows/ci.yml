@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: releng-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Check shell sources
+        run: shellcheck scripts/*.sh
+
+      - name: Test Docker context policy
+        run: scripts/test-docker-context-policy.sh
+
+      - name: Check Python sources
+        run: python3 -m py_compile scripts/*.py
+
+      - name: Build pinned releng image
+        run: docker build --file Dockerfile.index --tag volatoo-releng-index:ci .
